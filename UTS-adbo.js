@@ -1,29 +1,30 @@
 class Cuti {
-  constructor(namaCuti, kuota) {
-    this.namaCuti = namaCuti;
+  constructor(nama, kuota) {
+    this.nama = nama;
     this.kuota = kuota;
   }
 
   info() {
-    return `${this.namaCuti}: Sisa kuota ${this.kuota} hari.`;
+    return `${this.nama}: Sisa kuota ${this.kuota} hari.`;
   }
 
-  ajukan(jumlahHari) {
-    if (jumlahHari <= 0) {
-      console.log(`Jumlah hari untuk ${this.namaCuti} tidak valid.`);
+  ajukan(hari) {
+    if (hari <= 0) {
+      console.log(`Jumlah hari tidak valid.`);
       return;
     }
 
-    if (this.kuota >= jumlahHari) {
-      this.kuota -= jumlahHari;
+    if (hari > this.kuota) {
       console.log(
-        `Pengajuan ${this.namaCuti} selama ${jumlahHari} hari disetujui. (Sisa: ${this.kuota} hari)`
+        `Kuota ${this.nama} tidak cukup. (Sisa: ${this.kuota}, Diminta: ${hari})`
       );
-    } else {
-      console.log(
-        `Kuota anda tidak cukup untuk mengajukan cuti ini. (Sisa: ${this.kuota}, Diminta: ${jumlahHari})`
-      );
+      return;
     }
+
+    this.kuota -= hari;
+    console.log(
+      `Cuti ${this.nama} ${hari} hari disetujui. (Sisa: ${this.kuota} hari)`
+    );
   }
 }
 
@@ -31,9 +32,9 @@ class CutiTahunan extends Cuti {
   constructor() {
     super("Cuti Tahunan", 12);
   }
-  
+
   info() {
-    return `${super.info()} (Gunakan untuk liburan/istirahat panjang).`;
+    return super.info() + " (Untuk liburan/istirahat panjang.)";
   }
 }
 
@@ -53,38 +54,36 @@ class Karyawan {
   constructor(nama, jabatan) {
     this.nama = nama;
     this.jabatan = jabatan;
-    this.daftarCuti = {
+    this.cuti = {
       tahunan: new CutiTahunan(),
       sakit: new CutiSakit(),
       melahirkan: new CutiMelahirkan(),
     };
   }
 
-  ambilCuti(jenisCuti, jumlahHari) {
-    console.log(`\n--- ${this.nama} mengajukan ${jenisCuti} (${jumlahHari} hari) ---`);
-    
-    const cutiPilihan = this.daftarCuti[jenisCuti];
+  ambil(jenis, hari) {
+    console.log(`\n--- ${this.nama} mengajukan ${jenis} (${hari} hari) ---`);
 
-    if (cutiPilihan) {
-      cutiPilihan.ajukan(jumlahHari);
-    } else {
+    const pilih = this.cuti[jenis];
+    if (!pilih) {
       console.log("Jenis cuti tidak ditemukan.");
+      return;
     }
+
+    pilih.ajukan(hari);
   }
 
-  cekSemuaKuota() {
-    console.log(`\n--- Status Kuota Cuti: ${this.nama} ---`);
-    Object.values(this.daftarCuti).forEach((cuti) => {
-      console.log(cuti.info());
-    });
+  cekKuota() {
+    console.log(`\n--- Kuota Cuti: ${this.nama} ---`);
+    Object.values(this.cuti).forEach((c) => console.log(c.info()));
   }
 }
 
 const karyawan1 = new Karyawan("Budi", "Staff IT");
 
-karyawan1.cekSemuaKuota();
-karyawan1.ambilCuti("tahunan", 5);
-karyawan1.ambilCuti("sakit", 3); 
-karyawan1.ambilCuti("melahirkan", 45);
-karyawan1.ambilCuti("tahunan", 7);
-karyawan1.ambilCuti("tahunan", 1);
+karyawan1.cekKuota();
+karyawan1.ambil("tahunan", 5);
+karyawan1.ambil("sakit", 3);
+karyawan1.ambil("melahirkan", 45);
+karyawan1.ambil("tahunan", 7);
+karyawan1.ambil("tahunan", 1);
