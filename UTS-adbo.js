@@ -13,18 +13,12 @@ class Cuti {
       console.log(`Jumlah hari tidak valid.`);
       return;
     }
-
     if (hari > this.kuota) {
-      console.log(
-        `Kuota ${this.nama} tidak cukup. (Sisa: ${this.kuota}, Diminta: ${hari})`
-      );
+      console.log(`Kuota ${this.nama} tidak cukup. (Sisa: ${this.kuota}, Diminta: ${hari})`);
       return;
     }
-
     this.kuota -= hari;
-    console.log(
-      `Cuti ${this.nama} ${hari} hari disetujui. (Sisa: ${this.kuota} hari)`
-    );
+    console.log(`Cuti ${this.nama} ${hari} hari disetujui. (Sisa: ${this.kuota} hari)`);
   }
 }
 
@@ -32,7 +26,6 @@ class CutiTahunan extends Cuti {
   constructor() {
     super("Cuti Tahunan", 12);
   }
-
   info() {
     return super.info() + " (Untuk liburan/istirahat panjang.)";
   }
@@ -63,13 +56,11 @@ class Karyawan {
 
   ambil(jenis, hari) {
     console.log(`\n--- ${this.nama} mengajukan ${jenis} (${hari} hari) ---`);
-
     const pilih = this.cuti[jenis];
     if (!pilih) {
       console.log("Jenis cuti tidak ditemukan.");
       return;
     }
-
     pilih.ajukan(hari);
   }
 
@@ -79,6 +70,7 @@ class Karyawan {
   }
 }
 
+// Contoh penggunaan
 const karyawan1 = new Karyawan("Budi", "Staff IT");
 
 karyawan1.cekKuota();
